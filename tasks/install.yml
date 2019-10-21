@@ -1,0 +1,58 @@
+---
+- name: "Mount MS SQL installer image"
+  win_disk_image:
+    image_path: "{{ mssql_installer_image }}"
+    state: present
+  when: not mssql_installer_location
+  register: mssql_image
+
+- name: "Set MS SQL installer location"
+  set_fact:
+    mssql_installer_location: "{{ mssql_image.mount_path }}setup.exe"
+  when:
+    - mssql_image.mount_path is defined
+    - not mssql_installer_location
+
+- name: "Set MS SQL installation configuration file"
+  win_template:
+    src: "mssql_install_configuration.ini.j2"
+    dest: "{{ mssql_configuration_file }}"
+  when: not mssql_custom_configuration_file
+
+- name: "Install MS SQL"
+  win_package:
+    path: "{{ mssql_installer_location }}"
+    arguments: "/IAcceptSQLServerLicenseTerms /ConfigurationFile=\"{{ mssql_configuration_file }}\"
+      /SAPWD=\"{{ mssql_sa_password }}\"{{ mssql_installer_additional_cmd_args }}"
+    creates_service: "{{ mssql_service }}"
+    state: present
+  register: mssql_install
+
+- name: "Check if reboot required"
+  debug:
+    msg: windows reboot was triggered by MS SQL install
+  when:
+    - mssql_install.reboot_required is defined
+    - mssql_install.reboot_required
+  changed_when: mssql_install.reboot_required
+  notify:
+    - Reboot windows
+
+- name: "Check if serviece restart required"
+  debug:
+    msg: "MS SQL service {{ mssql_service_name }} will be restarted"
+  when:
+    - mssql_install.restart_required is defined
+    - mssql_install.restart_required
+  changed_when: mssql_install.restart_required
+  notify:
+    - Restart MS SQL service
+
+- name: "Unmount MS SQL installer image"
+  win_disk_image:
+    image_path: "{{ mssql_installer_image }}"
+    state: absent
+  when: mssql_image.mount_path is defined
+
+- name: "Run all notified handlers"
+  meta: flush_handlers

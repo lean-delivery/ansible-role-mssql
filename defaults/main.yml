@@ -1,2 +1,39 @@
 ---
 # defaults file for mssql
+
+windows_reboot_allowed: True
+mssql_port: 1433
+mssql_sqlcollation: "SQL_Latin1_General_CP1_CI_AS"
+mssql_configuration_file: C:\Windows\Temp\mssql_configuration.ini
+mssql_custom_configuration_file: False
+mssql_action: "Install"
+
+mssql_instance_dir: C:\Program Files\Microsoft SQL Server
+mssql_install_shareddir: "{{ mssql_instance_dir }}"
+mssql_install_sharedwowdir: C:\Program Files (x86)\Microsoft SQL Server
+
+# allow to change folders location
+mssql_installsqldatadir: "{{ mssql_instance_dir }}"
+mssql_sqlbackupdir:
+mssql_sqluserdbdir:
+mssql_sqluserdblogdir:
+mssql_sqltempdblogdir:
+mssql_sqltempdbdirs: # array
+
+mssql_server_service_start_type: "Automatic"
+mssql_agent_service_start_type: "Manual"
+mssql_browser_service_start_type: "Disabled"
+
+mssql_instance: "MSSQLSERVER"
+mssql_installer_image: C:\Windows\Temp\MSSQL_Installer.iso
+mssql_installer_location:
+mssql_installer_additional_cmd_args:
+mssql_features:
+  - "SQLENGINE"
+mssql_admins:
+  - "{{ ansible_user }}"
+mssql_sql_auth: False
+mssql_sa_password: "$ecureP@$$w0rd"
+mssql_namedpipes_enabled: 0
+mssql_tcp_enabled: 1
+mssql_firewall: False
