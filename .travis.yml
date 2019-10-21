@@ -20,7 +20,8 @@ install:
   - ansible-lint --version
 
 script:
-  - molecule lint
+  - yamllint . -c .yamllint
+  - ansible-lint . -c .ansible-lint
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
