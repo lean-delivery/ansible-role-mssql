@@ -30,7 +30,7 @@ Lint:
   tags:
     - aws
 
-AWS mssql:
+.AWS mssql:
   variables:
     AWS_REGION: us-east-1
   stage: deployment test

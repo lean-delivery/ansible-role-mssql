@@ -1,33 +1,33 @@
 ---
 # tasks file for mssql
 
-- name: "Set MS SQL service name"
+- name: Set MS SQL service name
   set_fact:
-    mssql_service_name: "{{ mssql_instance }}"
+    mssql_service_name: '{{ mssql_instance }}'
   when: mssql_instance == 'MSSQLSERVER'
 
-- name: "Set MS SQL service name"
+- name: Set MS SQL service name
   set_fact:
     mssql_service_name: "MSSQL${{ mssql_instance }}"
   when: mssql_instance != 'MSSQLSERVER'
 
-- name: "Check MS SQL service"
+- name: Check MS SQL service
   win_service:
-    name: "{{ mssql_service_name }}"
+    name: '{{ mssql_service_name }}'
   register: mssql_service
 
 - include_tasks: install.yml
   when: not mssql_service.exists
 
-- name: "Configure MS SQL firewall"
+- name: Configure MS SQL firewall
   win_firewall_rule:
     name: MS SQL
-    localport: "{{ mssql_port }}"
+    localport: '{{ mssql_port }}'
     action: allow
     direction: in
     protocol: tcp
     state: present
-    enabled: True
+    enabled: true
   when:
     - mssql_tcp_enabled == 1
     - mssql_firewall

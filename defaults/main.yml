@@ -1,11 +1,11 @@
 ---
 # defaults file for mssql
 
-windows_reboot_allowed: True
+windows_reboot_allowed: true
 mssql_port: 1433
 mssql_sqlcollation: "SQL_Latin1_General_CP1_CI_AS"
 mssql_configuration_file: C:\Windows\Temp\mssql_configuration.ini
-mssql_custom_configuration_file: False
+mssql_custom_configuration_file: false
 mssql_action: "Install"
 
 mssql_instance_dir: C:\Program Files\Microsoft SQL Server
@@ -32,8 +32,8 @@ mssql_features:
   - "SQLENGINE"
 mssql_admins:
   - "{{ ansible_user }}"
-mssql_sql_auth: False
+mssql_sql_auth: false
 mssql_sa_password: "$ecureP@$$w0rd"
 mssql_namedpipes_enabled: 0
 mssql_tcp_enabled: 1
-mssql_firewall: False
+mssql_firewall: false
