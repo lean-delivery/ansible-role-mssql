@@ -1,0 +1,16 @@
+---
+- name: Prepare host to S3 transport
+  hosts: localhost
+  gather_facts: true
+  vars:
+    transport_local: "/tmp/sql_server.iso"
+  tasks:
+    - name: Download artifact from s3
+      aws_s3:
+        bucket: static-aws
+        object: sql_server_2016_sp2.iso
+        dest: '{{ transport_local }}'
+        mode: get
+        overwrite: different
+      retries: 5
+      delay: 2

@@ -1,0 +1,11 @@
+- name: Set MS SQL service name
+  set_fact:
+    mssql_service_name: '{{ mssql_instance }}'
+  when: mssql_instance == 'MSSQLSERVER'
+
+- name: Set MS SQL service name
+  set_fact:
+    mssql_service_name: "MSSQL${{ mssql_instance }}"
+  when: mssql_instance != 'MSSQLSERVER'
+
+- include_tasks: install.yml

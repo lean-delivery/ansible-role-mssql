@@ -4,7 +4,7 @@
 windows_reboot_allowed: true
 mssql_port: 1433
 mssql_sqlcollation: "SQL_Latin1_General_CP1_CI_AS"
-mssql_configuration_file: C:\Windows\Temp\mssql_configuration.ini
+mssql_configuration_file: '{{ ansible_env.TEMP }}\mssql_configuration.ini'
 mssql_custom_configuration_file: false
 mssql_action: "Install"
 
@@ -25,7 +25,7 @@ mssql_agent_service_start_type: "Manual"
 mssql_browser_service_start_type: "Disabled"
 
 mssql_instance: "MSSQLSERVER"
-mssql_installer_image: C:\Windows\Temp\MSSQL_Installer.iso
+mssql_installer_image: '{{ ansible_env.TEMP }}\sql_server.iso'
 mssql_installer_location:
 mssql_installer_additional_cmd_args:
 mssql_features:
@@ -37,3 +37,7 @@ mssql_sa_password: "$ecureP@$$w0rd"
 mssql_namedpipes_enabled: 0
 mssql_tcp_enabled: 1
 mssql_firewall: false
+
+transport: web
+transport_web: '{{ transport_web_default }}'
+transport_local: "/tmp/sql_server.iso"

@@ -1,33 +1,26 @@
 ---
 # tasks file for mssql
+- name: Load a system variables file based on distribution or OS family
+  include_vars: '{{ distribution }}'
+  with_first_found:
+    - '{{ ansible_os_family }}.yml'
+    - default.yml
+  loop_control:
+    loop_var: distribution
 
-- name: Set MS SQL service name
-  set_fact:
-    mssql_service_name: '{{ mssql_instance }}'
-  when: mssql_instance == 'MSSQLSERVER'
+- name: 'Fetch MSSQL artifact with {{ transport }} transport'
+  include_tasks: '{{ transport_driver }}'
+  with_first_found:
+    - '{{ ansible_system }}/fetch/{{ transport }}.yml'
+    - unknown-transport.yml
+  loop_control:
+    loop_var: transport_driver
 
-- name: Set MS SQL service name
-  set_fact:
-    mssql_service_name: "MSSQL${{ mssql_instance }}"
-  when: mssql_instance != 'MSSQLSERVER'
-
-- name: Check MS SQL service
-  win_service:
-    name: '{{ mssql_service_name }}'
-  register: mssql_service
-
-- include_tasks: install.yml
-  when: not mssql_service.exists
-
-- name: Configure MS SQL firewall
-  win_firewall_rule:
-    name: MS SQL
-    localport: '{{ mssql_port }}'
-    action: allow
-    direction: in
-    protocol: tcp
-    state: present
-    enabled: true
-  when:
-    - mssql_tcp_enabled == 1
-    - mssql_firewall
+- name: Choose platform based task
+  include_tasks: '{{ platform }}'
+  with_first_found:
+    - '{{ ansible_system }}/system_{{ transport }}.yml'
+    - '{{ ansible_system }}/system.yml'
+    - not-supported.yml
+  loop_control:
+    loop_var: platform
