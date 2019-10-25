@@ -1,7 +1,5 @@
 ---
 # defaults file for mssql
-
-windows_reboot_allowed: true
 mssql_port: 1433
 mssql_sqlcollation: "SQL_Latin1_General_CP1_CI_AS"
 mssql_configuration_file: '{{ ansible_env.TEMP }}\mssql_configuration.ini'

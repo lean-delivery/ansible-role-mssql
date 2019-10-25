@@ -5,9 +5,8 @@
   win_reboot:
     reboot_timeout: 9000
     post_reboot_delay: 20
-  when: windows_reboot_allowed
 
 - name: Restart MS SQL service
   win_service:
-    name: '{{ mssql_service_name }}'
+    name: '{{ mssql_instance }}'
     state: restarted

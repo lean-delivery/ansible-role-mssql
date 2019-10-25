@@ -4,6 +4,7 @@
     image_path: '{{ mssql_installer_image }}'
     state: present
   when: not mssql_installer_location
+  changed_when: false
   register: mssql_image
 
 - name: Set MS SQL installer location
@@ -53,6 +54,7 @@
     image_path: '{{ mssql_installer_image }}'
     state: absent
   when: mssql_image.mount_path is defined
+  changed_when: false
 
 - name: Run all notified handlers
   meta: flush_handlers
