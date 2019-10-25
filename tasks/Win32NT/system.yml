@@ -1,3 +1,4 @@
+---
 - name: Set MS SQL service name
   set_fact:
     mssql_service_name: '{{ mssql_instance }}'
