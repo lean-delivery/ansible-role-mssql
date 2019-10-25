@@ -1,0 +1,107 @@
+;SQL Server Configuration File
+[OPTIONS]
+
+; Specifies a Setup work flow, like INSTALL, UNINSTALL, or UPGRADE. This is a required parameter.
+ACTION="{{ mssql_action }}"
+
+; Detailed help for command line argument ENU has not been defined yet.
+ENU="True"
+
+; Setup will not display any user interface.
+QUIET="True"
+
+; Specify whether SQL Server Setup should discover and include product updates. The valid values are True and False or 1 and 0. By default SQL Server Setup will include updates that are found.
+; Fails if enabled on non interactive sessions.
+UpdateEnabled="False"
+
+; Specifies features to install, uninstall, or upgrade. The list of top-level features include SQL, AS, RS, IS, MDS, and Tools. The SQL feature will install the Database Engine, Replication, Full-Text, and Data Quality Services (DQS) server. The Tools feature will install Management Tools, Books online components, SQL Server Data Tools, and other shared components.
+FEATURES={{ mssql_features | join(',') }}
+
+; Displays the command line parameters usage
+HELP="False"
+
+; Specifies that the detailed Setup log should be piped to the console.
+INDICATEPROGRESS="False"
+
+; Specifies that Setup should install into WOW64. This command line argument is not supported on an IA64 or a 32-bit system.
+X86="False"
+
+; Specify the Instance ID for the SQL Server features you have specified. SQL Server directory structure, registry structure, and service names will incorporate the instance ID of the SQL Server instance.
+INSTANCEID="{{ mssql_instance }}"
+
+; Specify a default or named instance. MSSQLSERVER is the default instance for non-Express editions and SQLExpress for Express editions. This parameter is required when installing the SQL Server Database Engine (SQL), Analysis Services (AS), or Reporting Services (RS).
+INSTANCENAME="{{ mssql_instance }}"
+
+; Specify the installation directory.
+INSTANCEDIR="{{ mssql_instance_dir }}"
+
+; Specify the root installation directory for shared components.  This directory remains unchanged after shared components are already installed.
+INSTALLSHAREDDIR="{{ mssql_install_shareddir }}"
+
+; Specify the root installation directory for the WOW64 shared components.  This directory remains unchanged after WOW64 shared components are already installed.
+INSTALLSHAREDWOWDIR="{{ mssql_install_sharedwowdir }}"
+
+; Specify that SQL Server feature usage data can be collected and sent to Microsoft. Specify 1 or True to enable and 0 or False to disable this feature.
+SQMREPORTING="False"
+
+; Specify if errors can be reported to Microsoft to improve future SQL Server releases. Specify 1 or True to enable and 0 or False to disable this feature.
+ERRORREPORTING="False"
+
+; Specifies a Windows collation or an SQL collation to use for the Database Engine.
+SQLCOLLATION="{{ mssql_sqlcollation }}"
+
+; Startup type for the SQL Server service.
+SQLSVCSTARTUPTYPE="{{ mssql_server_service_start_type }}"
+
+; Windows account(s) to provision as SQL Server system administrators.
+SQLSYSADMINACCOUNTS={% for sqladmin in mssql_admins %}"{{ sqladmin }}" {% endfor %}
+
+{% if mssql_sql_auth %}
+; The default is Windows Authentication. Use "SQL" for Mixed Mode Authentication.
+SECURITYMODE="SQL"
+{% endif %}
+
+; Provision current user as a Database Engine system administrator for SQL Server 2012 Express.
+ADDCURRENTUSERASSQLADMIN="False"
+
+; Specify 0 to disable or 1 to enable the TCP/IP protocol.
+TCPENABLED="{{ mssql_tcp_enabled }}"
+
+; Specify 0 to disable or 1 to enable the Named Pipes protocol.
+NPENABLED="{{ mssql_namedpipes_enabled }}"
+
+; Startup type for Agent Service.
+AGTSVCSTARTUPTYPE="{{ mssql_agent_service_start_type }}"
+
+; Startup type for Browser Service.
+BROWSERSVCSTARTUPTYPE="{{ mssql_browser_service_start_type }}"
+
+{% if mssql_installsqldatadir != mssql_instance_dir %}
+; The Database Engine root data directory.
+INSTALLSQLDATADIR="{{ mssql_installsqldatadir }}"
+{% endif %}
+
+{% if mssql_sqlbackupdir %}
+; Default directory for the Database Engine backup files.
+SQLBACKUPDIR="{{ mssql_sqlbackupdir }}"
+{% endif %}
+
+{% if mssql_sqluserdbdir %}
+; Default directory for the Database Engine user databases.
+SQLUSERDBDIR="{{ mssql_sqluserdbdir }}"
+{% endif %}
+
+{% if mssql_sqluserdblogdir %}
+; Default directory for the Database Engine user database logs.
+SQLUSERDBLOGDIR="{{ mssql_sqluserdblogdir }}"
+{% endif %}
+
+{% if mssql_sqltempdbdirs %}
+; Directories for Database Engine TempDB files.
+SQLTEMPDBDIR={% for sqltempdbdir in mssql_sqltempdbdirs %}"{{ sqltempdbdir }}" {% endfor %}
+{% endif %}
+
+{% if mssql_sqltempdblogdir %}
+; Directory for the Database Engine TempDB log files.
+SQLTEMPDBLOGDIR="{{ mssql_sqltempdblogdir }}"
+{% endif %}

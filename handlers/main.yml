@@ -1,0 +1,12 @@
+---
+# handlers file for mssql
+
+- name: Reboot windows
+  win_reboot:
+    reboot_timeout: 9000
+    post_reboot_delay: 20
+
+- name: Restart MS SQL service
+  win_service:
+    name: '{{ mssql_instance }}'
+    state: restarted

@@ -1,0 +1,13 @@
+---
+- name: Configure MS SQL firewall
+  win_firewall_rule:
+    name: MS SQL
+    localport: '{{ mssql_port }}'
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: true
+  when:
+    - mssql_tcp_enabled == 1
+    - mssql_firewall

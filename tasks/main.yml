@@ -1,0 +1,26 @@
+---
+# tasks file for mssql
+- name: Load a system variables file based on distribution or OS family
+  include_vars: '{{ distribution }}'
+  with_first_found:
+    - '{{ ansible_os_family }}.yml'
+    - default.yml
+  loop_control:
+    loop_var: distribution
+
+- name: 'Fetch MSSQL artifact with {{ transport }} transport'
+  include_tasks: '{{ transport_driver }}'
+  with_first_found:
+    - '{{ ansible_system }}/fetch/{{ transport }}.yml'
+    - unknown-transport.yml
+  loop_control:
+    loop_var: transport_driver
+
+- name: Choose platform based task
+  include_tasks: '{{ platform }}'
+  with_first_found:
+    - '{{ ansible_system }}/system_{{ transport }}.yml'
+    - '{{ ansible_system }}/system.yml'
+    - not-supported.yml
+  loop_control:
+    loop_var: platform
