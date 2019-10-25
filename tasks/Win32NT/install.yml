@@ -24,7 +24,7 @@
     path: '{{ mssql_installer_location }}'
     arguments: "/IAcceptSQLServerLicenseTerms /ConfigurationFile=\"{{ mssql_configuration_file }}\"
       /SAPWD=\"{{ mssql_sa_password }}\"{{ mssql_installer_additional_cmd_args }}"
-    creates_service: '{{ mssql_service }}'
+    creates_service: '{{ mssql_instance }}'
     state: present
   register: mssql_install
 
@@ -40,7 +40,7 @@
 
 - name: Check if serviece restart required
   debug:
-    msg: "MS SQL service {{ mssql_service_name }} will be restarted"
+    msg: "MS SQL service {{ mssql_instance }} will be restarted"
   when:
     - mssql_install.restart_required is defined
     - mssql_install.restart_required
